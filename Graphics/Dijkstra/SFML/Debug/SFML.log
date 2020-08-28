@@ -1,4 +1,2 @@
-﻿  main.cpp
-C:\Users\Tanner\Documents\C++\Dijkstra\SFML\main.cpp(37,58): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
-C:\Users\Tanner\Documents\C++\Dijkstra\SFML\main.cpp(37,40): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
-  SFML.vcxproj -> C:\Users\Tanner\Documents\C++\Dijkstra\Debug\Dijkstra.exe
+﻿  Node.cpp
+  SFML.vcxproj -> C:\Users\Tanner\Documents\Github\Real-Life-Dijkstra\Graphics\Dijkstra\Debug\Dijkstra.exe
