@@ -10,16 +10,21 @@ class Graph
 {
 private:
 	std::vector<Node> nodes;
+	double referenceLat, referenceLong;
+
+	void normalizeCoords(double&, double&); // Make coords easier to draw
 
 public:
-	Graph()  {}
+	Graph() : referenceLat(0), referenceLong(0) {}
+	Graph(double latitude, double longitude);
 	~Graph() {}
 	
 	void addNode(uint64_t id, double latitude, double longitude);
+	void addNodeNormalized(uint64_t id, double latitude, double longitude);
 	void addNode(Node node);
 	void organize(); // sort the nodes vector
 	void formAdjacency(uint64_t source, uint64_t dest); // Connect 2 nodes together
-	void normalizeCoords(); // Make coords easier to draw
+	void setReference(double latitude, double longitude); // set reference coords for normalizing
 	void draw(sf::RenderWindow& window);
 
 	void test() {

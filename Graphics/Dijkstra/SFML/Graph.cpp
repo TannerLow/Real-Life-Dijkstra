@@ -1,8 +1,17 @@
 #include "Graph.h"
 #include <algorithm>
 
+Graph::Graph(double lat, double lon) 
+	: referenceLat(lat), referenceLong(lon) {}
+
 void Graph::addNode(uint64_t id, double lat, double lon) {
 	nodes.push_back(Node(id, lat, lon));
+}
+
+void Graph::addNodeNormalized(uint64_t id, double lat, double lon) {
+	double y = lat, x = lon;
+	normalizeCoords(y, x);
+	nodes.push_back(Node(id, lat, lon, y, x));
 }
 
 void Graph::addNode(Node node) {
@@ -22,19 +31,35 @@ void Graph::formAdjacency(uint64_t src, uint64_t dst) {
 	to->neighbors.push_front(from);
 }
 
-void Graph::normalizeCoords() {
-	float x = 33, y = -118;
-	double scaleFactor = 10000000;
-	for (Node node : nodes) {
-		node.latitude  -= x;
-		node.longitude -= y;
-		node.latitude  *= scaleFactor;
-		node.longitude *= scaleFactor;
-	}
-}
-
 void Graph::draw(sf::RenderWindow& window) {
 	for (Node node : nodes) {
 		node.getPoint().draw(window);
 	}
 }
+
+void Graph::setReference(double lat, double lon) {
+	referenceLat  = lat;
+	referenceLong = lon;
+}
+
+#define PI 3.14159265359
+double greatCircleDistance(double pLat, double pLong,
+	double qLat, double qLong, double radius) {
+	pLat *= PI / 180; pLong *= PI / 180;
+	qLat *= PI / 180; qLong *= PI / 180;
+	return radius * acos(cos(pLat) * cos(pLong) * cos(qLat) * cos(qLong) +
+		cos(pLat) * sin(pLong) * cos(qLat) * sin(qLong) +
+		sin(pLat) * sin(qLat));
+}
+
+#define EARTH_RADIUS 6137000
+void Graph::normalizeCoords(double& originalLat, double& originalLong) {
+	double xComponent = greatCircleDistance(referenceLat, referenceLong, originalLat, referenceLong, EARTH_RADIUS);
+	double yComponent = greatCircleDistance(referenceLat, referenceLong, referenceLat, originalLong, EARTH_RADIUS);
+	originalLat  = xComponent;
+	originalLong = yComponent;
+	std::cout << originalLat  << std::endl;
+	std::cout << originalLong << std::endl;
+	//FIX THIS MAKE IT NO ABSOLUTE VALUE
+}
+
