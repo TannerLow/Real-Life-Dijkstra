@@ -22,3 +22,7 @@ sf::Vector2f Point::getCenter() const {
 	return sf::Vector2f(dot.getPosition().x + dot.getRadius(), 
 						dot.getPosition().y + dot.getRadius());
 }
+
+void Point::setPosition(float x, float y) {
+	dot.setPosition(x, y);
+}

@@ -9,6 +9,10 @@ void Node::addNeighbor(Node* n) {
 	neighbors.push_front(n);
 }
 
+Point Node::getPoint() const {
+	return point;
+}
+
 bool Node::operator<(const Node& b) const {
 	return id < b.id;
 }
