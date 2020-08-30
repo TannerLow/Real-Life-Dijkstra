@@ -9,7 +9,7 @@
 #define WINDOW_WIDTH   800
 #define WINDOW_HEIGHT  600
 #define CAMERA_SPEED   0.05f
-#define ROTATION_SPEED 0.01f
+#define ROTATION_SPEED 0.02f
 
 float handleRotation();
 void  handleCameraMovement(sf::RenderWindow&, sf::View&);
@@ -18,15 +18,6 @@ int main() {
 
 	sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Dijkstras");
     sf::View view(sf::FloatRect(0.f, 0.f, WINDOW_WIDTH, WINDOW_HEIGHT));
-    
-    Point p1(200.f, 400.f);
-    Point p2(500.f, 500.f);
-    Point p3(100.f, 50.f);
-    Point p4(10.f, 200.f);
-
-    Line line1(p1, p2, sf::Color::Green);
-    Line line2(p3, p4, sf::Color::Magenta);
-    Line line3(p1, p4, sf::Color::Cyan);
 
     Graph graph;
     graph.setReference(33.8168780, -118.0177677);
@@ -65,8 +56,6 @@ int main() {
                     view.zoom(1.1f);
                 }
                 window.setView(view);
-                //std::cout << "mouse x: " << event.mouseWheel.x << std::endl;
-                //std::cout << "mouse y: " << event.mouseWheel.y << std::endl;
             }
         }
 
@@ -79,14 +68,6 @@ int main() {
 
         // Render cycle
         window.clear();
-        /*line1.draw(window);
-        line2.draw(window);
-        line3.draw(window);
-        p1.draw(window);
-        p2.draw(window);
-        p3.draw(window);
-        p4.draw(window);*/
-
         graph.draw(window);
         window.display();
     }

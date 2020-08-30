@@ -1,5 +1,6 @@
 #pragma once
 #include "Node.h"
+#include "Line.h"
 #include <vector>
 #include <cstdint>
 #include <SFML/Graphics.hpp>
@@ -10,6 +11,7 @@ class Graph
 {
 private:
 	std::vector<Node> nodes;
+	std::vector<Line> graphConnections;
 	double referenceLat, referenceLong;
 
 	void normalizeCoords(double&, double&); // Make coords easier to draw

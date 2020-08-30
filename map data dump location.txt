@@ -1,0 +1,1 @@
+https://download.geofabrik.de/north-america/us-west-latest.osm.bz2

@@ -29,12 +29,18 @@ void Graph::formAdjacency(uint64_t src, uint64_t dst) {
 	//point to each other
 	from->neighbors.push_front(to);
 	to->neighbors.push_front(from);
+	//add line to list for drawing purposes
+	graphConnections.push_back(Line(from->getPoint(), to->getPoint()));
 }
 
 void Graph::draw(sf::RenderWindow& window) {
-	for (Node node : nodes) {
+	//draw lines
+	for (Line connection : graphConnections) 
+		connection.draw(window);
+	
+	//draw nodes
+	for (Node node : nodes) 
 		node.getPoint().draw(window);
-	}
 }
 
 void Graph::setReference(double lat, double lon) {
@@ -54,10 +60,10 @@ double greatCircleDistance(double pLat, double pLong,
 
 #define EARTH_RADIUS 6137000
 void Graph::normalizeCoords(double& originalLat, double& originalLong) {
-	double xComponent = greatCircleDistance(referenceLat, referenceLong, originalLat, referenceLong, EARTH_RADIUS);
-	double yComponent = greatCircleDistance(referenceLat, referenceLong, referenceLat, originalLong, EARTH_RADIUS);
-	originalLat  = xComponent;
-	originalLong = yComponent;
+	double yComponent = greatCircleDistance(referenceLat, referenceLong, originalLat, referenceLong, EARTH_RADIUS);
+	double xComponent = greatCircleDistance(referenceLat, referenceLong, referenceLat, originalLong, EARTH_RADIUS);
+	originalLat  = (originalLat  > referenceLat ) ? -yComponent : yComponent;
+	originalLong = (originalLong < referenceLong) ? -xComponent : xComponent;
 	std::cout << originalLat  << std::endl;
 	std::cout << originalLong << std::endl;
 	//FIX THIS MAKE IT NO ABSOLUTE VALUE
