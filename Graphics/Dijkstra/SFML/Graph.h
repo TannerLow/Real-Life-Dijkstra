@@ -5,36 +5,40 @@
 #include <cstdint>
 #include <SFML/Graphics.hpp>
 
-#include <iostream>
-
 class Graph
 {
 private:
-	std::vector<Node> nodes;
-	std::vector<Line> graphConnections;
-	double referenceLat, referenceLong;
+	std::vector<Node> nodes; //nodes, drawn as white dots
+	std::vector<Line> graphConnections; //node connections drawn as white lines
+	std::vector<Line> shortestPath; //dijkstra path, displayed in red
+	double referenceLat, referenceLong; //reference lat and lon for the normalizing process
 
-	void normalizeCoords(double&, double&); // Make coords easier to draw
+	//Maps lat and lon to 2D corrdinates for convenient drawing and distance calculations
+	void normalizeCoords(double&, double&);
 
 public:
+	//constructors
 	Graph() : referenceLat(0), referenceLong(0) {}
 	Graph(double latitude, double longitude);
 	~Graph() {}
 	
-	void addNode(uint64_t id, double latitude, double longitude);
-	void addNodeNormalized(uint64_t id, double latitude, double longitude);
-	void addNode(Node node);
-	void organize(); // sort the nodes vector
-	void formAdjacency(uint64_t source, uint64_t dest); // Connect 2 nodes together
-	void setReference(double latitude, double longitude); // set reference coords for normalizing
-	void draw(sf::RenderWindow& window);
 
-	void test() {
-		//Test code to see if it worked
-		for (Node* n : nodes[0].neighbors) {
-			std::cout << "connected to\n";
-			n->display();
-		}
-	}
+
+	//functions
+	void addNode(Node node); //non-normalized
+	void addNode(uint64_t id, double latitude, double longitude); //non-normalized
+	void addNodeNormalized(uint64_t id, double latitude, double longitude);
+
+	// sort the nodes vector based on id
+	void organize();
+	// Connect 2 nodes together and add each other as neighbors
+	void formAdjacency(uint64_t source, uint64_t dest);
+	// set reference coords for normalizing
+	void setReference(double latitude, double longitude);
+	void draw(sf::RenderWindow& window);
+	//returns pointer to node nearest the given coords
+	Node* getNearestNode(double x, double y);
+	//performs dijkstras on graph, displays results as red path (if results are found)
+	void dijkstra(Node* source, Node* dest);
 };
 

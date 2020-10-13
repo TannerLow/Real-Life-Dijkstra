@@ -1,16 +1,16 @@
 #include "Point.h"
 
 Point::Point() {
-	dot.setRadius(10.f);
+	dot.setRadius(radius);
 }
 
 Point::Point(float x, float y) {
-	dot.setRadius(10.f);
+	dot.setRadius(radius);
 	dot.setPosition(x, y);
 }
 
 Point::Point(const sf::Vector2f& pos) {
-	dot.setRadius(10.f);
+	dot.setRadius(radius);
 	dot.setPosition(pos);
 }
 
@@ -25,4 +25,8 @@ sf::Vector2f Point::getCenter() const {
 
 void Point::setPosition(float x, float y) {
 	dot.setPosition(x, y);
+}
+
+void Point::setColor(sf::Color color) {
+	dot.setFillColor(color);
 }

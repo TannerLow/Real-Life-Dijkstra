@@ -1,4 +1,43 @@
-file   = open("map (2).osm", 'r')
+#Author: Tanner Lowthorp
+import sys
+from os import path
+
+#default files
+rawDataFile      = "map.osm"
+nodesExtractFile = "nodes.txt"
+waysExtractFile  = "ways.txt"
+
+#Basic input validation
+if len(sys.argv) == 2:
+	rawDataFile = sys.argv[1]
+
+elif len(sys.argv) == 3:
+	nodesExtractFile = sys.argv[1]
+	waysExtractFile  = sys.argv[2]
+
+elif len(sys.argv) == 4:
+	rawDataFile      = sys.argv[1]
+	nodesExtractFile = sys.argv[1]
+	waysExtractFile  = sys.argv[2]
+
+elif len(sys.argv) > 4:
+	print("Too many arguments")
+	print("Uses:")
+	print("map_parser.py")
+	print("map_parser.py <osm file>")
+	print("map_parser.py <nodes file> <ways file>")
+	print("map_parser.py <osm file> <nodes file> <ways file>")
+	sys.exit(0)
+
+#open map data file
+file = None
+if path.exists(rawDataFile):
+	file = open(rawDataFile, 'r', encoding="utf8")
+else:
+	print("File", rawDataFile, "not found")
+	sys.exit(0)
+
+#Begin parsing map data
 tokens = file.read().split("<node ")
 file.close()
 
@@ -9,52 +48,47 @@ ways  = []
 for token in tokens:
 	#print(token)
 	#print('\n\n')
-
+	#parse id, latitude, and longitude for each node
 	if token[:2] == "id":
-		splitToken = token.split()
-		nodes.append([splitToken[0].split('\"')[1],
-					  splitToken[7].split('\"')[1], 
-					  splitToken[8].split('\"')[1]])
+		nodeInfo = []
+		splitToken = token.split("id=\"")
+		nodeInfo.append(splitToken[1].split('\"')[0])
+		splitToken = token.split("lat=\"")
+		nodeInfo.append(splitToken[1].split('\"')[0])
+		splitToken = token.split("lon=\"")
+		nodeInfo.append(splitToken[1].split('\"')[0])
+		nodes.append(nodeInfo)
 
 
-	#print('=' * 100)
 
 #populate ways list
 waysTokens = tokens[len(tokens)-1].split("<way ")
-waysTokens.pop(0)
-#print(len(waysTokens), '<-------')
+waysTokens.pop(0) #discard all data prior to the first way
+
 for way in waysTokens:
-	#print(way)
+	#parse all node id's that belong to a way
 	ndTokens = way.split("<nd ")[1:]
-	#print('\n\n')
 
 	temp = []
 	for nd in ndTokens:
 		temp.append(nd.split('\"')[1])
 	ways.append(temp)
 
-	#print('=' * 100)
+
+#helper function for writing data to files
+def writeToFile(file, list):
+	for each in list:
+		for data in each:
+			file.write(data + ' ')
+
+		file.write('\n')
+
+	file.close()
 
 #write nodes info file
-file = open("./extract/nodes.txt", 'w')
-
-for each in nodes:
-	print(each)
-	for data in each:
-		file.write(data + ' ')
-
-	file.write('\n')
-
-file.close()
+file = open(nodesExtractFile, 'w')
+writeToFile(file, nodes)
 
 #write ways info file
-file = open("./extract/ways.txt", 'w')
-
-for each in ways:
-	print(each)
-	for data in each:
-		file.write(data + ' ')
-
-	file.write('\n')
-
-file.close()
+file = open(waysExtractFile, 'w')
+writeToFile(file, ways)

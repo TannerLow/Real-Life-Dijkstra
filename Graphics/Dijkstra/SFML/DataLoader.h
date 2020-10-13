@@ -8,11 +8,25 @@ private:
 	std::ifstream nodeFileHandle;
 	std::ifstream waysFileHandle;
 
-public:
-	DataLoader();
-	DataLoader(const char* nodeFilename, const char* waysFilename);
-	~DataLoader();
+	//helper functions for load()
+	void loadNodes();
+	void loadWays();
 
-	Graph& getGraph();
+public:
+	//constructors
+	DataLoader();
+	~DataLoader();
+	
+	// loads data from the provided files
+	// nodes file required format: id latitude longitude\n
+	//                             ...
+	//
+	//  ways file required format: id id ...\n
+	//                             ...
+	// THROWS EXCEPTION if files cannot be loaded
+	void load(const char* nodeFilename = "nodes.txt", const char* waysFilename = "ways.txt");
+
+	//getter for the graph constructed from the input data
+	Graph* getGraph();
 };
 

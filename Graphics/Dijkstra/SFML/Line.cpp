@@ -35,3 +35,7 @@ void Line::setColor(const sf::Color& color) {
 	line[0].color = color;
 	line[1].color = color;
 }
+
+const sf::Vertex* Line::getLine() const {
+	return line;
+}
